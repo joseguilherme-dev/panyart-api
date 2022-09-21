@@ -12,9 +12,13 @@ datasource db {
 
 // Models:
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
+  id        String      @id @default(uuid())
+  email     String      @unique
   nickname  String
   password  String
   coins     BigInt
+  instagram String?
+  discord   String?
+  twitter   String?
+  facebook  String?
 }
