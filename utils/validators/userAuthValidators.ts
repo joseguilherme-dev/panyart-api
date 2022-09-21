@@ -4,11 +4,32 @@ import { doesNotExist, isString } from "./general";
 
 const prisma = new PrismaClient();
 
-export async function validateEmail(email: string): Promise<boolean> {
-    if (!isString(email))
-        throw new Error('E-mail is not a string!')
+
+// Login Validators
+export function validateLoginPassword(password: string): boolean {
+    if (doesNotExist(password))
+        throw new Error('Password was not inserted!')
+    if (!isString(password))
+        throw new Error('Password is not a string!')
+    return true
+}
+
+export async function validateLoginEmail(email: string): Promise<boolean> {
     if (doesNotExist(email))
         throw new Error('E-mail was not inserted!')
+    if (!isString(email))
+        throw new Error('E-mail is not a string!')
+    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
+        throw new Error('E-mail is not valid!')
+    return true
+}
+
+// Sign Up Validators
+export async function validateSignUpEmail(email: string): Promise<boolean> {
+    if (doesNotExist(email))
+        throw new Error('E-mail was not inserted!')
+    if (!isString(email))
+        throw new Error('E-mail is not a string!')
     if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
         throw new Error('E-mail is not valid!')
     const emailExists = await prisma.user.count({where: {email: email}})
@@ -18,19 +39,17 @@ export async function validateEmail(email: string): Promise<boolean> {
     return true
 }
 
-export function validatePassword(password: string): boolean {
-    if (!isString(password))
-        throw new Error('Password is not a string!')
+export function validateSignUpPassword(password: string): boolean {
     if (doesNotExist(password))
         throw new Error('Password was not inserted!')
+    if (!isString(password))
+        throw new Error('Password is not a string!')
     // Passwords should follow the pattern: minimum eight characters, at least one letter and one number.
     if (!password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/))
         throw new Error('Password is not valid!')
-    
     return true
 }
-
-export function validatePasswords(password1: string, password2: string,): boolean {
+export function validateSignUpPasswords(password1: string, password2: string,): boolean {
     if (!isString(password2))
         throw new Error('Password confirmation is not a string!')
     if (doesNotExist(password2))
@@ -40,9 +59,9 @@ export function validatePasswords(password1: string, password2: string,): boolea
     return true
 }
 
-export function validateNickname(nickname: string): boolean {
+export function validateSignUpNickname(nickname: string): boolean {
     if (!isString(nickname))
-        throw new Error('Password is not a string!')
+        throw new Error('Nickname is not a string!')
     if (doesNotExist(nickname))
         throw new Error('Nickname was not inserted!')
     // Nicknames should follow the pattern:
@@ -53,7 +72,7 @@ export function validateNickname(nickname: string): boolean {
     return true
 }
 
-export function validateSocialMediaNickname(socialMedia: string): boolean {
+export function validateSignUpSocialMediaNickname(socialMedia: string): boolean {
     if (!doesNotExist(socialMedia))
         if (!isString(socialMedia))
             throw new Error('Nickname is not a string!')
