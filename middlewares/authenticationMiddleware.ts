@@ -6,11 +6,16 @@ import {
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config';
 
-export default async function authenticationMiddleware(req: Request, res: Response, next: NextFunction){
+export async function isAuthenticatedMiddleware(req: Request, res: Response, next: NextFunction){
     /*
      *      This middleware verifies if the user is authenticated using JWT stored in the cookies.
      */
-    if(!req.cookies.hasOwnProperty('jwt')){
+
+    // Reset information
+    req.body.isAuthenticated = false
+    req.body.authenticatedId = undefined
+    
+    if(!req.cookies.jwt){
         req.body.isAuthenticated = false
         return next()
     } else {
@@ -21,16 +26,17 @@ export default async function authenticationMiddleware(req: Request, res: Respon
         // that means the JWT is valid, and the user is properly authenticated:
         if (!isJWTValid.hasOwnProperty('name')){ // Errors has 'name' property on it, containing the error name.
             req.body.isAuthenticated = true
+            req.body.authenticatedId = isJWTValid.id
             return next()
         } else {
-            // But if an error has ocurred, it's time to verify it's type. 
-            if(isJWTValid.name === 'JsonWebTokenError')
-                // If the token is simply invalid (made up or something) it's time to end the request.
-                return res.status(403).json({msg: "Invalid JWT token."}).end()
-            else {
-                // If the token has expired, let's also end the request, the user should log in again.
-                return res.status(403).json({msg: "JWT token has expired."}).end()
-            }
+            // If the token is simply invalid (made up or has expired) the user is not authenticated.
+            res.clearCookie("jwt")
+            req.body.isAuthenticated = false
+            return next()
         }
-    }    
+    }
+}
+
+export function authenticatedOnlyMiddleware(req: Request, res: Response, next: NextFunction){
+    if (!req.body.isAuthenticated) res.status(403).json({"msg": "Please login to execute this action."}).end(); else return next()
 }
