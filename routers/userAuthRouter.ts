@@ -11,7 +11,7 @@ import {
     getUserIdByEmail,
     isUserPasswordCorrect
 } from '../utils/auth';
-import { authenticateJWT, generateJWT } from '../utils/jwt';
+import { generateJWT } from '../utils/jwt';
 
 // Validators
 import {
