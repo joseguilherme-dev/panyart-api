@@ -16,7 +16,8 @@ With these coins, you can buy other art products from the artist, listed on a di
 
 - User can register in the platform;
 - User can login in the platform;
-- Staff can generate a coins card;
+- Staff can generate coins cards;
+- User can redeem coins cards;
 
 ---
 
