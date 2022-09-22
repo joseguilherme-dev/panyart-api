@@ -1,14 +1,15 @@
 import express, { Express, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 
 // Routers
 import userAuthRouter from './routers/userAuthRouter';
 import adminRouter from './routers/adminRouter';
-
-import cookieParser from 'cookie-parser';
+import userRouter from './routers/userRouter';
 
 // Middlewares
 import { isAuthenticatedMiddleware } from './middlewares/authenticationMiddleware';
 import { isStaffMiddleware } from './middlewares/staffMiddleware';
+
 
 const app: Express = express();
 const port = 8000;
@@ -29,6 +30,7 @@ app.use(isStaffMiddleware);
 // Routers
 app.use('/auth', userAuthRouter)
 app.use('/admin', adminRouter)
+app.use('/user', userRouter)
 
 
 app.listen(port, () => {
