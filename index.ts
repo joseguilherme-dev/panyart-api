@@ -1,10 +1,16 @@
 import express, { Express, Request, Response } from 'express';
+
+// Routers
 import userAuthRouter from './routers/userAuthRouter';
-import { authenticateJWT } from './utils/jwt';
+import adminRouter from './routers/adminRouter';
+
 import cookieParser from 'cookie-parser';
 
-const app: Express = express();
+// Middlewares
+import { isAuthenticatedMiddleware } from './middlewares/authenticationMiddleware';
+import { isStaffMiddleware } from './middlewares/staffMiddleware';
 
+const app: Express = express();
 const port = 8000;
 
 // Config
@@ -16,12 +22,13 @@ app.get('/', (req, res) => {
   res.send('Bem-vindo!')
 })
 
-// Middlewares
-//app.use(authenticateJWT)
+// Global Middlewares
+app.use(isAuthenticatedMiddleware)
+app.use(isStaffMiddleware);
 
-// Routes
+// Routers
 app.use('/auth', userAuthRouter)
-
+app.use('/admin', adminRouter)
 
 
 app.listen(port, () => {
