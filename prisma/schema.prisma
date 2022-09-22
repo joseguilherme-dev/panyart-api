@@ -12,13 +12,25 @@ datasource db {
 
 // Models:
 model User {
-  id        String      @id       @default(uuid())
-  email     String      @unique
-  nickname  String
-  password  String
-  coins     BigInt
-  instagram String?
-  discord   String?
-  twitter   String?
-  facebook  String?
+  id                String      @id           @default(uuid())
+  email             String      @unique
+  nickname          String
+  password          String
+  coins             BigInt
+  instagram         String?
+  discord           String?
+  twitter           String?
+  facebook          String?
+  isStaff           Boolean                   @default(false)
+  Cards             Card[]
+}
+
+model Card {
+  code              String      @id         
+  coins             BigInt
+  redeemed          Boolean                   @default(false)
+  redeemedBy        String?
+  redeemedAt        DateTime?
+  createdAt         DateTime                  @default(now())
+  User              User?                     @relation(fields: [redeemedBy], references: [id])
 }
