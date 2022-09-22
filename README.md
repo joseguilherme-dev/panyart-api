@@ -16,6 +16,7 @@ With these coins, you can buy other art products from the artist, listed on a di
 
 - User can register in the platform;
 - User can login in the platform;
+- Staff can generate a coins card;
 
 ---
 
@@ -26,5 +27,6 @@ With these coins, you can buy other art products from the artist, listed on a di
 - Password Encryption using `bcryptjs`;
 - Request validations using `express-validator`;
 - Database ORM `prisma`;
+- `express` router middlewares to control permissions;
 - Environment variables management with `dotenv`.
 --- 
