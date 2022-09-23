@@ -50,10 +50,10 @@ export function validateSignUpPassword(password: string): boolean {
     return true
 }
 export function validateSignUpPasswords(password1: string, password2: string,): boolean {
-    if (!isString(password2))
-        throw new Error('Password confirmation is not a string!')
     if (doesNotExist(password2))
         throw new Error('Password confirmation was not inserted!')
+    if (!isString(password2))
+        throw new Error('Password confirmation is not a string!')
     if (password1 !== password2)
         throw new Error('Passwords does not match!')
     return true
