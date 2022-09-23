@@ -78,3 +78,18 @@ export function validateSignUpSocialMediaNickname(socialMedia: string): boolean 
             throw new Error('Nickname is not a string!')
     return true
 }
+
+// Forgot Password Validators
+
+export async function validatePasswordForgotEmail(email: string): Promise<boolean> {
+    if (doesNotExist(email))
+        throw new Error('E-mail was not inserted!')
+    if (!isString(email))
+        throw new Error('E-mail is not a string!')
+    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/))
+        throw new Error('E-mail is not valid!')
+    const emailExists = await prisma.user.count({where: {email: email}})
+    if (!(emailExists > 0))
+        throw new Error('Email does not exist on database!')
+    return true
+}
