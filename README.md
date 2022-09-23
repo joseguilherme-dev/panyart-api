@@ -17,10 +17,12 @@ With these coins, you can buy other art products from the artist, listed on a di
 - User can register;
 - User can login;
 - User can logout;
-- User can reset his password;
+- User can reset his password after logged on;
+- User can reset his password if it has been forgotten;
+- User receives confirmation emails;
 - Staff can generate coins cards;
 - User can redeem coins cards;
-
+ 
 ---
 
 ## ⚙️ System Features:
