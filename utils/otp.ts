@@ -12,10 +12,14 @@ import { authenticator } from 'otplib';
  *
  */
 
+// TOPT expiration time (seconds)
+export const TOPT_STEP = 600;
+
+
 export function generateTOPT(userId: string, type: string): string {
     authenticator.options = {
         digits: 6,
-        step: 600,
+        step: TOPT_STEP,
         window: 0,
     };
     const totpSecret = SECRET_KEY + userId
