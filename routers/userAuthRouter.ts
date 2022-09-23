@@ -2,6 +2,9 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 
+// Middlewares
+import { authenticatedOnlyMiddleware } from '../middlewares/authenticationMiddleware';
+
 // Prisma
 import { PrismaClient } from '@prisma/client';
 
@@ -13,6 +16,8 @@ import {
     isUserPasswordCorrect
 } from '../utils/auth';
 import { generateJWT } from '../utils/jwt';
+import { generateTOPT, verifyTOTP} from '../utils/otp';
+import { sendResetPasswordEmail } from '../utils/email';
 
 // Validators
 import {
@@ -22,13 +27,13 @@ import {
     validateSignUpNickname,
     validateSignUpSocialMediaNickname,
     validateLoginEmail,
-    validateLoginPassword
+    validateLoginPassword,
+    validatePasswordForgotEmail
 } from '../utils/validators/userAuthValidators';
 
 // Config
 import { ENV } from '../config';
-import { authenticatedOnlyMiddleware } from '../middlewares/authenticationMiddleware';
-import { generateTOPT, verifyTOTP} from '../utils/otp';
+
 
 const userRouter = express.Router()
 const prisma = new PrismaClient()
@@ -100,7 +105,8 @@ userRouter.get(
     authenticatedOnlyMiddleware,
     async (req: Request, res: Response) => {
         const otp: string = generateTOPT(req.body.authenticatedId, 'pwdreset')
-        return res.status(200).json({otp: otp});
+        sendResetPasswordEmail(req.body.authenticatedId, otp)
+        return res.status(200).json({msg: "OTP sent to account owner's email."});
 });
 
 userRouter.get(
@@ -133,6 +139,53 @@ userRouter.post(
         return res.clearCookie("jwt").status(200).json({msg: "Password was succesfully reseted! Please, login again."});
 });
 
+userRouter.get(
+    '/password/forgot',
+    // Field Validators,
+    body('email').custom(validatePasswordForgotEmail),
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+        const userId: any = await getUserIdByEmail(req.body.email) 
+        const otp: string = generateTOPT(userId, 'pwdforgot')
+        sendResetPasswordEmail(req.body.authenticatedId, otp)
+        return res.status(200).json({msg: "OTP sent to account owner's email."});
+});
+
+userRouter.get(
+    '/password/forgot/verify',
+    // Field Validators,
+    body('token').isAlphanumeric(),
+    body('email').custom(validatePasswordForgotEmail),
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+        const userId: any = await getUserIdByEmail(req.body.email)
+        return res.status(200).json({isOtpValid: verifyTOTP(req.body.token, userId, 'pwdforgot')});
+});
+
+userRouter.post(
+    '/password/forgot',
+    // Field Validators,
+    body('token').isAlphanumeric(),
+    body('email').custom(validatePasswordForgotEmail),
+    body('password1').custom(validateSignUpPassword),
+    body('password2').custom((password2, {req}) => {return validateSignUpPasswords(req.body.password1, password2)}),
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+
+        const userId: any = await getUserIdByEmail(req.body.email)
+
+        const isOTPValid: boolean = verifyTOTP(req.body.token, userId, 'pwdforgot')
+
+        console.log(req.body.token, userId, isOTPValid)
+        if (!isOTPValid)
+            return res.status(401).json({msg: "Token is invalid or has expired."});
+
+        await changePassword(req.body.password1, userId)
+        return res.clearCookie("jwt").status(200).json({msg: "Password was succesfully reseted! Please, login again."});
+});
 
 
 export default userRouter;
