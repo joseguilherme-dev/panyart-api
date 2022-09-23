@@ -14,9 +14,10 @@ With these coins, you can buy other art products from the artist, listed on a di
 
 ## 🛠️ User Features:
 
-- User can register in the platform;
-- User can login in the platform;
-- User can logout of the platform;
+- User can register;
+- User can login;
+- User can logout;
+- User can reset his password;
 - Staff can generate coins cards;
 - User can redeem coins cards;
 
@@ -26,9 +27,11 @@ With these coins, you can buy other art products from the artist, listed on a di
 
 - Server runs using `express`;
 - JWT Authentication using `cookie-cutter` and `jsonwebtoken`;
+- TOTP authentication using `otplib`;
 - Password Encryption using `bcryptjs`;
 - Request validations using `express-validator`;
 - Database ORM `prisma`;
-- `express` router middlewares to control permissions;
+- `express` router middlewares to control *permissions*;
 - Environment variables management with `dotenv`.
+
 --- 
