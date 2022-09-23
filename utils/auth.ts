@@ -20,3 +20,9 @@ export async function getUserIdByEmail(email: string){
     const user: any = await prisma.user.findFirst({where: {email}, select: {id: true}})
     return user.id
 }
+
+export async function changePassword(newPassword: string, userId: string){
+    const newEncryptedPassword: string = await generateEncryptedPassword(newPassword)
+    await prisma.user.update({where: {id: userId}, data: {password: newEncryptedPassword}})
+    return true
+}
