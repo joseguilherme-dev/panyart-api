@@ -60,10 +60,10 @@ export function validateSignUpPasswords(password1: string, password2: string,): 
 }
 
 export function validateSignUpNickname(nickname: string): boolean {
-    if (!isString(nickname))
-        throw new Error('Nickname is not a string!')
     if (doesNotExist(nickname))
         throw new Error('Nickname was not inserted!')
+    if (!isString(nickname))
+        throw new Error('Nickname is not a string!')
     // Nicknames should follow the pattern:
     // minimum three characters, maximum sixteen characters and can not contain spaces.
     // It can also contains '-' and '_'.
@@ -91,5 +91,17 @@ export async function validatePasswordForgotEmail(email: string): Promise<boolea
     const emailExists = await prisma.user.count({where: {email: email}})
     if (!(emailExists > 0))
         throw new Error('Email does not exist on database!')
+    return true
+}
+
+// Update Personal Information
+
+export async function validateEmptyField(field: string): Promise<boolean> {
+    if (field === "")
+        throw new Error('Field cannot be empty!')
+    if (field.length <= 2)
+        throw new Error('Field cannot be empty!')
+    if (field.trim().length === 0)
+        throw new Error('Field cannot be empty!')
     return true
 }
