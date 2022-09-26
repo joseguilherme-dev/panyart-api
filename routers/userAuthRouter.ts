@@ -85,11 +85,12 @@ userRouter.post(
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
-
+        const userId = await getUserIdByEmail(req.body.email)
+        if (!userId)
+            return res.status(401).json({message: "User e-mail does not exists!"})
         const isCorrect: any = await isUserPasswordCorrect(req.body.password, req.body.email)
         if (!isCorrect) return res.status(401).json({message: "Incorrect password!"})
 
-        const userId = await getUserIdByEmail(req.body.email)
         const jwt: any = generateJWT(userId)
 
         return res.cookie("jwt", jwt, {httpOnly: true, secure: (ENV === "PRODUCTION"),})
