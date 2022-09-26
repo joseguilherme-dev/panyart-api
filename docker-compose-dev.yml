@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  panyart-db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+  panyart-api:
+    depends_on:
+      - panyart-db
+    build: .
+    command: npm run start
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app/panyart-api
+  
+volumes:
+  db_data:
+    driver: local
