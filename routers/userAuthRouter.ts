@@ -12,8 +12,10 @@ import { PrismaClient } from '@prisma/client';
 import {
     changePassword,
     generateEncryptedPassword,
+    getUserById,
     getUserIdByEmail,
-    isUserPasswordCorrect
+    isUserPasswordCorrect,
+    updatePersonalInformation
 } from '../utils/auth';
 import { generateJWT } from '../utils/jwt';
 import { generateTOPT, verifyTOTP} from '../utils/otp';
@@ -28,7 +30,8 @@ import {
     validateSignUpSocialMediaNickname,
     validateLoginEmail,
     validateLoginPassword,
-    validatePasswordForgotEmail
+    validatePasswordForgotEmail,
+    validateEmptyField
 } from '../utils/validators/userAuthValidators';
 
 // Config
@@ -148,7 +151,7 @@ userRouter.get(
         if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
         const userId: any = await getUserIdByEmail(req.body.email) 
         const otp: string = generateTOPT(userId, 'pwdforgot')
-        sendResetPasswordEmail(req.body.authenticatedId, otp)
+        sendResetPasswordEmail(userId, otp)
         return res.status(200).json({msg: "OTP sent to account owner's email."});
 });
 
@@ -179,7 +182,6 @@ userRouter.post(
 
         const isOTPValid: boolean = verifyTOTP(req.body.token, userId, 'pwdforgot')
 
-        console.log(req.body.token, userId, isOTPValid)
         if (!isOTPValid)
             return res.status(401).json({msg: "Token is invalid or has expired."});
 
@@ -187,5 +189,36 @@ userRouter.post(
         return res.clearCookie("jwt").status(200).json({msg: "Password was succesfully reseted! Please, login again."});
 });
 
+userRouter.patch(
+    '/personal',
+    // Field Validations
+    body('nickname').custom(validateSignUpNickname),
+    body('twitter').custom(validateSignUpSocialMediaNickname),
+    body('discord').custom(validateSignUpSocialMediaNickname),
+    body('instagram').custom(validateSignUpSocialMediaNickname),
+    body('facebook').custom(validateSignUpSocialMediaNickname),
+    authenticatedOnlyMiddleware,
+    async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+        await updatePersonalInformation(req.body, req.body.authenticatedId)
+    res.status(201).json({'success': 'The user was updated succesfully!',});
+});
+
+userRouter.get(
+    '/personal',
+    authenticatedOnlyMiddleware,
+    async (req: Request, res: Response) => {
+    const user: any = await getUserById(req.body.authenticatedId)
+    res.status(201).json({
+        'personal': {
+            'nickname': user.nickname || '',
+            'twitter': user.twitter || '',
+            'discord': user.discord || '',
+            'instagram': user.instagram || '',
+            'facebook': user.facebook || '',
+        },
+    });
+});
 
 export default userRouter;
