@@ -17,8 +17,12 @@ export async function isUserPasswordCorrect (insertedPassword: string, email: st
 }
 
 export async function getUserIdByEmail(email: string){
-    const user: any = await prisma.user.findFirst({where: {email}, select: {id: true}})
-    return user.id
+    try {
+        const user: any = await prisma.user.findFirst({where: {email}, select: {id: true}})
+        return user.id
+    } catch (err) {
+        return false
+    }
 }
 
 export async function getUserById(id: string){
