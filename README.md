@@ -17,7 +17,7 @@ With these coins, you can buy other art products from the artist, listed on a di
 - User can register;
 - User can login;
 - User can logout;
-- User can update his contact informations;
+- User can update his personal informations;
 - User can reset his password after logged on;
 - User can reset his password if it has been forgotten;
 - User receives confirmation emails;
