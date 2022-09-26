@@ -30,3 +30,22 @@ export async function changePassword(newPassword: string, userId: string){
     await prisma.user.update({where: {id: userId}, data: {password: newEncryptedPassword}})
     return true
 }
+
+interface personalInformation {
+    nickname: string,
+    twitter: string,
+    discord: string,
+    instagram: string,
+    facebook: string,
+}
+
+export async function updatePersonalInformation(data: personalInformation, userId: string){
+    await prisma.user.update({where: {id: userId}, data: {
+        nickname: data.nickname,
+        twitter: data.twitter,
+        discord: data.discord,
+        instagram: data.instagram,
+        facebook: data.facebook,
+    }})
+    return true
+}
