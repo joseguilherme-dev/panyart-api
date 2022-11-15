@@ -11,9 +11,9 @@ import userRouter from './routers/userRouter';
 import { isAuthenticatedMiddleware } from './middlewares/authenticationMiddleware';
 import { isStaffMiddleware } from './middlewares/staffMiddleware';
 
-
 const app: Express = express();
-const port = 8000;
+const port = 80;
+const host = '0.0.0.0';
 
 // Config
 app.use(express.json());
@@ -35,6 +35,6 @@ app.use('/admin', adminRouter)
 app.use('/user', userRouter)
 
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(port, host, () => {
+  console.log(`⚡️[server]: Server is running at http://${host}:${port}`);
 });
