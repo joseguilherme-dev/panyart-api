@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "engines": {
+    "node": "17.9.0"
+  },
   "scripts": {
     "build": "npx tsc",
     "start": "tsnd --exit-child ./index.ts"
