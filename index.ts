@@ -12,8 +12,7 @@ import { isAuthenticatedMiddleware } from './middlewares/authenticationMiddlewar
 import { isStaffMiddleware } from './middlewares/staffMiddleware';
 
 const app: Express = express();
-const port = 80;
-const host = '0.0.0.0';
+const PORT = process.env.PORT || 8000
 
 // Config
 app.use(express.json());
@@ -35,6 +34,6 @@ app.use('/admin', adminRouter)
 app.use('/user', userRouter)
 
 
-app.listen(port, host, () => {
-  console.log(`⚡️[server]: Server is running at http://${host}:${port}`);
+app.listen(PORT, () => {
+  console.log(`⚡️[server]: Server is running at http://0.0.0.0:${PORT}`);
 });
