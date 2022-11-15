@@ -19,3 +19,9 @@ You can simply run:
 npx prisma migrate dev
 ```
 
+## Updating database in production:
+
+```
+npx prisma db push --preview-feature
+```
+
