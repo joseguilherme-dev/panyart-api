@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "tsnd --exit-child ./index.ts"
+    "dev": "tsnd --exit-child ./index.ts",
+    "start": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
