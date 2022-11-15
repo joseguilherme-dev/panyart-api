@@ -17,7 +17,6 @@ import { generateJWT } from '../utils/jwt';
 
 // Config
 import { ENV } from '../config';
-import testMiddleware from '../middlewares/testMiddleware';
 import { authenticatedOnlyMiddleware } from '../middlewares/authenticationMiddleware';
 import { staffOnlyMiddleware } from '../middlewares/staffMiddleware';
 import { generateCard } from '../utils/card';
