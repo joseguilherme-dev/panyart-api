@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 // Routers
 import userAuthRouter from './routers/userAuthRouter';
@@ -17,6 +18,7 @@ const port = 8000;
 // Config
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({origin: 'http://localhost:3000', credentials: true}));
 
 // Endpoint raiz
 app.get('/', (req, res) => {
