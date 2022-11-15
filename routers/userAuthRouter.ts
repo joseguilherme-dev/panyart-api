@@ -37,9 +37,10 @@ import {
 // Config
 import { ENV } from '../config';
 
-
 const userRouter = express.Router()
 const prisma = new PrismaClient()
+
+
 
 userRouter.post(
     '/register',
@@ -213,6 +214,8 @@ userRouter.get(
     const user: any = await getUserById(req.body.authenticatedId)
     res.status(201).json({
         'personal': {
+            'id': user.id,
+            'coins': user.coins.toString(),
             'nickname': user.nickname || '',
             'twitter': user.twitter || '',
             'discord': user.discord || '',
