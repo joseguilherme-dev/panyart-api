@@ -10,10 +10,17 @@ export async function isAuthenticatedMiddleware(
   /*
    *      This middleware verifies if the user is authenticated using JWT stored in the cookies.
    */
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Content-Type, Authorization, Content-Length, X-Requested-With"
   );
+
+  // intercept OPTIONS method
+  if ("OPTIONS" == req.method) {
+    res.send(200);
+  }
+
   res.type("txt");
 
   // Reset information
