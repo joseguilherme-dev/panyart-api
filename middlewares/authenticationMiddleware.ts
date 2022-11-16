@@ -21,25 +21,24 @@ export async function isAuthenticatedMiddleware(
     res.send(200);
   }
 
-  res.type("txt");
-
   // Reset information
   req.body.isAuthenticated = false;
   req.body.authenticatedId = undefined;
 
-  console.log(req.cookies);
   console.log(req.headers.authorization);
 
-  if (!req.cookies.jwt) {
+  const jwtToken = req.headers.authorization;
+
+  if (!req.headers.authorization) {
     req.body.isAuthenticated = false;
     return next();
   } else {
     const isJWTValid: any = await jwt.verify(
-      req.cookies.jwt,
+      jwtToken!,
       SECRET_KEY,
       (err: any) => {
         if (err) return err;
-        else return jwt.decode(req.cookies.jwt, SECRET_KEY);
+        else return jwt.decode(jwtToken!, SECRET_KEY);
       }
     );
     // If an error has not ocurred during the verification of JWT
