@@ -105,7 +105,7 @@ userRouter.post(
 
     return res
       .cookie("jwt", jwt, {
-        sameSite: false,
+        sameSite: "none",
         secure: true,
       })
       .status(200)
