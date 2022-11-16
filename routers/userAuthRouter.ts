@@ -180,7 +180,7 @@ userRouter.post(
   }
 );
 
-userRouter.get(
+userRouter.post(
   "/password/forgot",
   // Field Validators,
   body("email").custom(validatePasswordForgotEmail),
@@ -195,7 +195,7 @@ userRouter.get(
   }
 );
 
-userRouter.get(
+userRouter.post(
   "/password/forgot/verify",
   // Field Validators,
   body("token").isAlphanumeric(),
