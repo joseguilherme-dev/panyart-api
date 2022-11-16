@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 8000;
 app.use(cookieParser("", {}));
 app.use(
   cors({
-    origin: "http://127.0.0.1:3000",
+    origin: true,
     credentials: true,
     exposedHeaders: ["Authorization"],
   })
