@@ -10,6 +10,7 @@ export async function isAuthenticatedMiddleware(
   /*
    *      This middleware verifies if the user is authenticated using JWT stored in the cookies.
    */
+  res.type("txt");
 
   // Reset information
   req.body.isAuthenticated = false;
