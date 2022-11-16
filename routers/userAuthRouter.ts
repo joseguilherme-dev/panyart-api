@@ -104,7 +104,7 @@ userRouter.post(
     const jwt: any = generateJWT(userId);
 
     return res
-      .cookie("jwt", jwt)
+      .cookie("jwt", jwt, { secure: true, sameSite: "none" })
       .status(200)
       .json({ success: "The user has successfully logged in!", jwt: jwt });
   }

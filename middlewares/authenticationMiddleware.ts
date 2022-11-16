@@ -28,6 +28,7 @@ export async function isAuthenticatedMiddleware(
   req.body.authenticatedId = undefined;
 
   console.log(req.cookies);
+  console.log(req.headers.authorization);
 
   if (!req.cookies.jwt) {
     req.body.isAuthenticated = false;
