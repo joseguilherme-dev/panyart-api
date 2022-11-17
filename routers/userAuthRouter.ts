@@ -212,7 +212,7 @@ userRouter.post(
 );
 
 userRouter.post(
-  "/password/forgot",
+  "/password/forgot/perform",
   // Field Validators,
   body("token").isAlphanumeric(),
   body("email").custom(validatePasswordForgotEmail),
